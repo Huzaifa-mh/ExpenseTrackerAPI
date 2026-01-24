@@ -19,7 +19,7 @@ namespace ExpenseTrackerAPI.Data
                 new Category { Id = 4, Name = "Shopping", ColorCode = "#4BC0C0" },
                 new Category { Id = 5, Name = "Bills & Utilities", ColorCode = "#9966FF" },
                 new Category { Id = 6, Name = "Healthcare", ColorCode = "#FF9F40" },
-                new Category { Id = 7, Name = "Others", ColorCode = "#C9CBCF" },
+                new Category { Id = 7, Name = "Others", ColorCode = "#C9CBCF" }
             );
         }
     }
