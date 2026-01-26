@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackerAPI.Data;
+using ExpenseTrackerAPI.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,15 @@ namespace ExpenseTrackerAPI.Controllers
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
-            return Ok(categories);
+            
+            var categoriesDto = categories.Select(c => new CategoryDTO
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ColorCode = c.ColorCode
+            }).ToList();
+
+            return Ok(categoriesDto);
         }
     }
 }

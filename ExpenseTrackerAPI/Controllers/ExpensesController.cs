@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackerAPI.Data;
+using ExpenseTrackerAPI.DTOs;
 using ExpenseTrackerAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,19 @@ namespace ExpenseTrackerAPI.Controllers
         public async Task<IActionResult> GetExpense()
         {
             var expenses = await _context.Expenses.OrderByDescending(x => x.CreatedAt).Include(x=> x.Category).ToListAsync();
-            return Ok(expenses);
+
+            var expenseDto = expenses.Select(c => new ExpenseResponseDTO
+            {
+                Id = c.Id,
+                Amount = c.Amount,
+                Date = c.Date,
+                Description = c.Description,
+                CreatedAt = c.CreatedAt,
+                CategoryId = c.CategoryId,
+                CategoryName = c.Category.Name,
+                CategoryColor = c.Category.ColorCode
+            }).ToList();
+            return Ok(expenseDto);
         }
 
         [HttpGet("{id}")]
@@ -28,19 +41,57 @@ namespace ExpenseTrackerAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(expense);
+            var expenseDto =new ExpenseResponseDTO
+            {
+                Id = expense.Id,
+                Amount = expense.Amount,
+                Date = expense.Date,
+                Description = expense.Description,
+                CreatedAt = expense.CreatedAt,
+                CategoryId = expense.CategoryId,
+                CategoryName = expense.Category.Name,
+                CategoryColor = expense.Category.ColorCode
+            };
+            return Ok(expenseDto);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult<Expense>> CreateExpense([FromBody] Expense expense)
-        
-        //{ 
-        //    if(!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> CreateExpense([FromBody] ExpenseDTO expenseDto)
 
-        //}
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var expense = new Expense
+            {
+                Amount = expenseDto.Amount,
+                CategoryId = expenseDto.CategoryId,
+                Date = expenseDto.Date,
+                Description = expenseDto.Description,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Expenses.Add(expense);
+            await _context.SaveChangesAsync();
+
+            await _context.Entry(expense).Reference(e => e.Category).LoadAsync();
+
+            var response = new ExpenseResponseDTO
+            {
+                Id = expense.Id,
+                Amount = expense.Amount,
+                Date = expense.Date,
+                Description = expense.Description,
+                CreatedAt = expense.CreatedAt,
+                CategoryId = expense.CategoryId,
+                CategoryName = expense.Category.Name,
+                CategoryColor = expense.Category.ColorCode
+            };
+
+            return CreatedAtAction(nameof(GetExpenseById), new {id = expense.Id}, response);
+        }
 
     }
 }
