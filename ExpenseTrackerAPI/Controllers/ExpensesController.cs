@@ -93,5 +93,18 @@ namespace ExpenseTrackerAPI.Controllers
             return CreatedAtAction(nameof(GetExpenseById), new {id = expense.Id}, response);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExpense(int id)
+        {
+            var expense = await _context.Expenses.FindAsync(id);
+            if(expense is null)
+            {
+                return NotFound();
+            }
+            _context.Expenses.Remove(expense);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
