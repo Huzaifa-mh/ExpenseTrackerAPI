@@ -16,14 +16,14 @@ namespace ExpenseTrackerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetExpense()
         {
-            var expenses = await _context.Expenses.OrderBy(x => x.CreatedAt).Include(x=> x.Category).ToListAsync();
+            var expenses = await _context.Expenses.OrderByDescending(x => x.CreatedAt).Include(x=> x.Category).ToListAsync();
             return Ok(expenses);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetExpenseById([FromBody] int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetExpenseById(int id)
         {
-            var expense = await _context.Expenses.FindAsync(id);
+            var expense = await _context.Expenses.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
             if ( expense is null)
             {
                 return NotFound();
@@ -35,7 +35,11 @@ namespace ExpenseTrackerAPI.Controllers
         public async Task<IActionResult<Expense>> CreateExpense([FromBody] Expense expense)
         
         { 
-            
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
         }
 
     }
