@@ -31,16 +31,16 @@ namespace ExpenseTrackerAPI.Controllers
             return Ok(expense);
         }
 
-        [HttpPost]
-        public async Task<IActionResult<Expense>> CreateExpense([FromBody] Expense expense)
+        //[HttpPost]
+        //public async Task<IActionResult<Expense>> CreateExpense([FromBody] Expense expense)
         
-        { 
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //{ 
+        //    if(!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-        }
+        //}
 
     }
 }
