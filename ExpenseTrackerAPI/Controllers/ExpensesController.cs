@@ -65,6 +65,24 @@ namespace ExpenseTrackerAPI.Controllers
             return Ok(expenseDto);
         }
 
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetExpenseSummary()
+        {
+            var summary = await _context.Expenses
+                .Include(x => x.Category).GroupBy(e => e.CategoryId)
+                .Select(group => new ExpenseSummaryDTO
+                {
+                    CategoryId = group.Key,
+                    CategoryName = group.First().Category.Name,
+                    CategoryColor = group.First().Category.ColorCode,
+                    TotalAmount = group.Sum(e => e.Amount),
+                    ExpenseCount = group.Count()
+                }).ToListAsync();
+
+            return Ok(summary);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateExpense([FromBody] ExpenseDTO expenseDto)
 
