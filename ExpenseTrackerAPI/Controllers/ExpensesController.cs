@@ -15,11 +15,21 @@ namespace ExpenseTrackerAPI.Controllers
         private readonly ExpenseDbContext _context = context;
 
         [HttpGet]
-        public async Task<IActionResult> GetExpense()
+        public async Task<IActionResult> GetExpense([FromQuery] DateTime? startDate, DateTime? endDate)
         {
-            var expenses = await _context.Expenses.OrderByDescending(x => x.CreatedAt).Include(x=> x.Category).ToListAsync();
+            var query = _context.Expenses.Include(x=> x.Category).AsQueryable();
+            if(startDate.HasValue)
+            {
+                query = query.Where(x => x.Date >= startDate.Value);
+            }
+            if(endDate.HasValue)
+            {
+                query = query.Where(x => x.Date <= endDate);
+            }
 
-            var expenseDto = expenses.Select(c => new ExpenseResponseDTO
+            var expense = await query.OrderByDescending(x => x.CreatedAt).ToListAsync();
+
+            var expenseDto = expense.Select(c => new ExpenseResponseDTO
             {
                 Id = c.Id,
                 Amount = c.Amount,
