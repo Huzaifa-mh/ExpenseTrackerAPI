@@ -18,7 +18,8 @@ namespace ExpenseTrackerAPI.Controllers
         public async Task<IActionResult> GetExpense([FromQuery] DateTime? startDate, DateTime? endDate)
         {
             var query = _context.Expenses.Include(x=> x.Category).AsQueryable();
-            if(startDate.HasValue)
+            //Check if the startDate and endDate are provided
+            if (startDate.HasValue)
             {
                 query = query.Where(x => x.Date >= startDate.Value);
             }
