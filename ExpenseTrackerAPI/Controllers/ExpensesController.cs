@@ -29,6 +29,8 @@ namespace ExpenseTrackerAPI.Controllers
 
             var expense = await query.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
+
+            //Response DTO mapping
             var expenseDto = expense.Select(c => new ExpenseResponseDTO
             {
                 Id = c.Id,
