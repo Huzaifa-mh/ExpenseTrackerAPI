@@ -21,7 +21,7 @@ This API provides a structured way to:
 
 | Technology | Purpose |
 |------------|---------|
-| **ASP.NET Core 8.0** | Web API Framework |
+| **ASP.NET Core 10.0** | Web API Framework |
 | **C# 12** | Programming Language |
 | **Entity Framework Core** | ORM for Database Access |
 | **SQL Server** | Relational Database |
