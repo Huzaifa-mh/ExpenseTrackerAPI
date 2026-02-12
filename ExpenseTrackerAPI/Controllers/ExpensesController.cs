@@ -84,6 +84,27 @@ namespace ExpenseTrackerAPI.Controllers
             return Ok(summary);
         }
 
+        [HttpGet("monthly-summary")]
+        public async Task<IActionResult> GetMonthlySummary([FromQuery] int months = 6)
+        {
+            var startDate = DateTime.UtcNow.AddMonths(-months).Date;
+
+            var monthlySummary = await _context.Expenses
+                .Where(e => e.Date >= startDate)
+                .GroupBy(e => new { e.Date.Year, e.Date.Month })
+                .Select(group => new
+                {
+                    Year = group.Key.Year,
+                    Month = group.Key.Month,
+                    TotalAmount = group.Sum(e => e.Amount),
+                    ExpenseCount = group.Count()
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            return Ok(monthlySummary);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateExpense([FromBody] ExpenseDTO expenseDto)
@@ -94,11 +115,14 @@ namespace ExpenseTrackerAPI.Controllers
                 return BadRequest(ModelState);
             }
 
+            // ✅ FIX: Convert Date to UTC
+            var expenseDate = DateTime.SpecifyKind(expenseDto.Date, DateTimeKind.Utc);
+
             var expense = new Expense
             {
                 Amount = expenseDto.Amount,
                 CategoryId = expenseDto.CategoryId,
-                Date = expenseDto.Date,
+                Date = expenseDate,
                 Description = expenseDto.Description,
                 CreatedAt = DateTime.UtcNow
             };
