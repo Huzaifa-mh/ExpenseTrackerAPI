@@ -29,12 +29,22 @@ builder.Services.AddDbContext<ExpenseDbContext>(options =>
 
 //builder.Services.AddDbContext<ExpenseDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowReact", policy =>
+//    {
+//        policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "https://agreeable-plant-007f25a0f.1.azurestaticapps.net/").AllowAnyHeader().AllowAnyMethod();
+//    });
+//});
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "https://agreeable-plant-007f25a0f.1.azurestaticapps.net/").AllowAnyHeader().AllowAnyMethod();
-    });
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("https://agreeable-plant-007f25a0f.1.azurestaticapps.net/") // Replace with your actual frontend URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
 });
 
 var app = builder.Build();
@@ -54,7 +64,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReact");
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 
