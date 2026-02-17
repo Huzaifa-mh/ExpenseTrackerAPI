@@ -12,17 +12,7 @@ namespace ExpenseTrackerAPI.Data
         {
            base.OnModelCreating(modelBuilder);
 
-            // ✅ Configure DateTime columns for PostgreSQL
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach (var property in entityType.GetProperties())
-                {
-                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                    {
-                        property.SetColumnType("timestamp with time zone");
-                    }
-                }
-            }
+         
 
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Food & Dining", ColorCode="#FF6384" },

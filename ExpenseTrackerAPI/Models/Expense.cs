@@ -19,7 +19,7 @@ namespace ExpenseTrackerAPI.Models
 
         public string? Description { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public Category Category { get; set; } = null!;
     }
