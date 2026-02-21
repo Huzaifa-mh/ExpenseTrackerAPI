@@ -477,9 +477,9 @@ This project is for educational purposes.
 ## 👨‍💻 Developer
 
 **[Your Name]**
-- LinkedIn: [Your LinkedIn]
-- GitHub: [Your GitHub]
-- Email: [Your Email]
+- LinkedIn: [[Muhammad Huzaifa](https://www.linkedin.com/in/muhammadhuzaifamh/)]
+- GitHub: [[Muhammad Huzaifa](https://github.com/Huzaifa-mh)]
+- Email: [muhammadhuzaifa_mh@yahoo.com]
 
 ---
 
